@@ -6,6 +6,9 @@ import java.time.Instant;
 import java.time.Duration;
 
 public class Sorting {
+
+    public static long comparisons = 0;
+    public static long swaps = 0;
     public static void main(String args[]) {
 
         String fileName = "sortme1000000.txt";
@@ -58,6 +61,37 @@ public class Sorting {
             e.printStackTrace();
         }
 
+    }
+    void quickSort(int[] array, int start, int end) {
+        if (start < end) {
+            int p = partition(array, start, end);
+    
+            quickSort(array, start, p - 1);
+            quickSort(array, p + 1, end);
+        }
+    }
+    int partition(int array[], int start, int end) {
+        int pointer = array[end];
+        int i = (start - 1);
+    
+        for (int j = start; j < end; j++) {
+            comparisons++;
+            if (array[j] <= pointer) {
+                i++;
+    
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+                swaps++;
+            }
+        }
+    
+        int temp = array[i + 1];
+        array[i + 1] = array[end];
+        array[end] = temp;
+        swaps++;
+    
+        return i + 1;
     }
     public static void selectionSort(int array[], int count) {
 
