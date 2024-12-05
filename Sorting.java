@@ -13,9 +13,7 @@ public class Sorting {
 
         String fileName = "sortme1000000.txt";
         String outputFile = "sortedData.txt";
-        int[] largeArray = new int[1000000];
-        int[] smallArray = {3,13,5342,234,54,234,6,1,7,4,34,39};
-        
+        int[] largeArray = new int[1000000];       
 
         try {
             importFile(fileName, largeArray);
@@ -26,43 +24,37 @@ public class Sorting {
 
         
         //All of the info for the spreadsheet/bubbleSort.
-        // long[] timeArray = new long[6];
-        // int c = 0;
-        // for (int count = 10; count <= 1000000; count*=10) {
-        //     Instant start = Instant.now();
-        //     bubbleSort(largeArray, count);
-        //     Instant finish = Instant.now();
-        //     long elapsed = (long)Duration.between(start, finish).toMillis();
-        //     timeArray[c] = elapsed;
-        //     c++; // <-- Peak language
-        // }
-        // System.out.print("The times were "); 
-        // for (int i = 0; i < timeArray.length; i++) System.out.print(timeArray[i] + ", ");
-        // System.out.print(" respectively.\n\n");
+        long[] timeArray = new long[6];
+        int c = 0;
+        for (int count = 10; count <= 1000000; count*=10) {
 
+            swaps = 0;
+            comparisons = 0;
 
+            Instant start = Instant.now();
+            mergeSort(largeArray, 0, count-1);
+            Instant finish = Instant.now();
+            long elapsed = (long)Duration.between(start, finish).toMillis();
+            timeArray[c] = elapsed;
 
-        //Why are we using bubble sort...
-        // Instant start = Instant.now();
-        // mergeSort(largeArray, 0, largeArray.length-1);
-        // Instant finish = Instant.now();
+            System.out.println("\n\nComparisons for range 0 -> " + count + " = " + comparisons);
+            System.out.println("Swaps for range 0 -> " + count + " = " + swaps);
+            System.out.println("Time elapsed for range 0 -> " + count + " = " + timeArray[c]);
 
-        Instant start = Instant.now();
-        selectionSort(largeArray, 100000);
-        Instant finish = Instant.now();
-        
-        
-        System.out.println("The time was " + (long)Duration.between(start,finish).toMillis());
-        for (int i = 0; i < smallArray.length; i++) System.out.print(smallArray[i] + ", ");
-
-        try {
-            outputFile(outputFile, largeArray);
-        } catch (IOException e) {
-            e.printStackTrace();
+            c++; // <-- Peak language
         }
+        System.out.print("The times were "); 
+        for (int i = 0; i < timeArray.length; i++) System.out.print(timeArray[i] + ", ");
+        System.out.print(" respectively.\n\n");
+
+        // try {
+        //     outputFile(outputFile, largeArray);
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
 
     }
-    void quickSort(int[] array, int start, int end) {
+    static void quickSort(int[] array, int start, int end) {
         if (start < end) {
             int p = partition(array, start, end);
     
@@ -70,7 +62,7 @@ public class Sorting {
             quickSort(array, p + 1, end);
         }
     }
-    int partition(int array[], int start, int end) {
+    static int partition(int array[], int start, int end) {
         int pointer = array[end];
         int i = (start - 1);
     
@@ -101,16 +93,16 @@ public class Sorting {
         for (int i = 0; i < count -1; i++) {
             int min = i;
             for (int j = i+1; j < count; j++) {
+                if (array[min] < array[j])  min = j; 
                 comparisons++;
-                if (array[min] > array[j])  min = j; 
-                swaps++;
             }
 
             int temp = array[i];
             array[i] = array[min];
             array[min] = temp;
+            swaps++;
         }
-        System.out.println("Swaps were " + swaps + "\nComparisons were " + comparisons);
+        System.out.println("For count 0->" + count + ":\nSwaps were " + swaps + "\nComparisons were " + comparisons);
     }
     public static void bubbleSort(int array[], int count) {
         long[] compSwap = new long[2];
@@ -155,6 +147,9 @@ public class Sorting {
         // Initial index of merged subarray array
         int k = left;
         while (i < n1 && j < n2) {
+
+            comparisons++;
+
             if (L[i] >= R[j]) { // Determines (Acsending <=) or (Descending >=)
                 arr[k] = L[i];
                 i++;
@@ -162,6 +157,7 @@ public class Sorting {
             else {
                 arr[k] = R[j];
                 j++;
+                swaps++;
             }
             k++;
         }
